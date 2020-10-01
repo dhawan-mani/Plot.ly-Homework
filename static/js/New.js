@@ -27,8 +27,10 @@ function init(){
     const list = []
     for (j=0; j<names.length;j++){
         list.push({"OTU": names[j],"Sample_Values":sample_values[j],"OTU_LABELS":otu_ids[j],"Hover_Text":otu_labels[j]})
+       
     }
-    // console.log(list)
+    console.log(list) 
+    
     function compare(a,b){
         const sample_1 = a.Sample_Values;
         const sample_2 = b.sample_values;
@@ -36,6 +38,7 @@ function init(){
         if (sample_1 > sample_2){
             comparison = 1
         }
+        
         else if  (sample_1<sample_2){
             comparison = -1;
         }
@@ -80,8 +83,10 @@ function UpdateData(value){
             };
             var layout = {
                 height: 600,
-                width: 800
+                width: 800,
+                
               };
+             
         //var data = [trace1];
         // var layout = {
         // yaxis: {
@@ -89,7 +94,7 @@ function UpdateData(value){
         //     }
         
         // };  
-            Plotly.newPlot("bar",[trace1],layout);    
+            Plotly.newPlot("bar",[trace1],layout,options=options);    
             //buildplot(top_sample,top_labels);
         }
         }        
@@ -99,24 +104,24 @@ function UpdateData(value){
    
     
 
-function buildplot(top_sample, top_labels){
-    //data['orientation']  = 'h';
-    var trace1 = {
-                type: "bar",
-                x: top_sample,
-                y:`OTU${top_labels}`,
-                orientation:'h'
-    };
-    var data = [trace1];
-    // var layout = {
-    // xaxis: {
-    //     autorange: true,
-    //     //type: "linear"
-    //     }
+// function buildplot(top_sample, top_labels){
+//     //data['orientation']  = 'h';
+//     var trace1 = {
+//                 type: "bar",
+//                 x: top_sample,
+//                 y:`OTU${top_labels}`,
+//                 orientation:'h'
+//     };
+//     var data = [trace1];
+//     var layout = {
+//     xaxis: {
+//         autorange: true,
+//         //type: "linear"
+//         }
 
-    // };  
-    Plotly.newPlot("bar",data);
-}         
+//     // };  
+//     Plotly.newPlot("bar",data);
+// }         
 function optionChanged(newData){
     UpdateData(newData);
    

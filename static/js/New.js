@@ -2,19 +2,34 @@ let top_sample = [];
 let top_hover_text = [];
 let top_labels = [];
 let names = [];
-var data = [];
-let sorted_list = []
-
+let data = [];
+let sorted_list = [];
+let Demo_ethnicity = [];
+let Demo_gender = [];
+let Demo_age =[];
+let Demo_location = [];
+let Demo_bbtype =[];
+let Demo_wfreq = [];
+d3.select("#sample-metadata").append("div").attr("class","Demographic-info");
+let Demographic_info = d3.select(".Demographic-info");
 function init(){
     d3.json("samples.json").then((data) => {
-    // console.log(data)
+    console.log(data)
     var sample_values = data.samples.map((row) => row["sample_values"])
-    console.log(sample_values);
+    // console.log(sample_values);
     var otu_ids = data.samples.map((row) => row["otu_ids"])
     // console.log(otu_ids)
     var otu_labels = data.samples.map((row) => row["otu_labels"])
     console.log(otu_labels)
     names = data.names
+    Demo_ethnicity = data.metadata.map((row) => row["ethnicity"])
+    Demo_gender = data.metadata.map((row) => row["gender"])
+    Demo_age = data.metadata.map((row) => row["age"])
+    Demo_location = data.metadata.map((row) => row["location"])
+    Demo_bbtype = data.metadata.map((row) => row["bbtype"])
+    Demo_wfreq = data.metadata.map((row) => row["wfreq"])
+
+
     // console.log(names) 
     var dropdown = d3.select("#selDataset")
 // Appending the dropdown values as from names
@@ -56,9 +71,11 @@ function UpdateData(value){
     // var dropdown = d3.selectAll("#selDataset")
     // var dataset = dropdown.property("value");
     console.log(names);
+    // console.log(ethnicity)
     // let top_sample = [];
     // let top_hover_text = [];
     // let top_labels = [];
+   
     for (i=0; i<names.length;i++){
         if (value == names[i]){
             console.log("FOUND");
@@ -67,6 +84,26 @@ function UpdateData(value){
             top_hover_text = sorted_list[i].map((row) => row["Hover_Text"].slice(0,10).reverse());
             top_labels = sorted_list[i].map((row) => row["OTU_LABELS"].slice(0,10).reverse());
             console.log(sorted_list[i])
+            Demographic_info.html("")
+            Demographic_info.html(`<strong>id:${names[i]}<br>
+            <strong>ethnicity:${Demo_ethnicity[i]}<br>
+            <strong>gender:${Demo_gender[i]}<br>
+            <strong>age:${Demo_age[i]}<br>
+            <strong>location:${Demo_location[i]}<br>
+            <strong>bbtype:${Demo_bbtype[i]}<br>
+            <strong>wfreq:${Demo_wfreq[i]}<br>
+            `)
+
+
+      
+// let Demo_gender = [];
+// let Demo_age =[];
+// let Demo_location = [];
+// let Demo_bbtype =[];
+// let Demo_wfreq
+
+
+
             
             // top_labels.map((row,index)=> row[index])
             let New_labels=[];

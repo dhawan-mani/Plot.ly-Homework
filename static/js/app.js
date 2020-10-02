@@ -1,5 +1,5 @@
 
-    function buildplot(){d3.json("samples.json").then((data) => {
+    function getData(){d3.json("samples.json").then((data) => {
     // console.log(data)
     var sample_values = data.samples.map((row) => row["sample_values"])
     console.log(sample_values);
@@ -59,7 +59,7 @@
             Plotly.newPlot("bar",data,layout)
             }  
         })}
-        function optionChanged(){
+        function optionChanged(this.value){
             buildplot()
         }
        

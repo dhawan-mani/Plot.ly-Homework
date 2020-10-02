@@ -33,7 +33,7 @@ function init(){
     
     function compare(a,b){
         const sample_1 = a.Sample_Values;
-        const sample_2 = b.sample_values;
+        const sample_2 = b.Sample_Values;
         let comparison = 0;
         if (sample_1 > sample_2){
             comparison = 1
@@ -63,9 +63,11 @@ function UpdateData(value){
         if (value == names[i]){
             console.log("FOUND");
             //data = sorted_list[i]
-            top_sample = sorted_list[i].map((row) => row["Sample_Values"].slice(0,10));
-            top_hover_text = sorted_list[i].map((row) => row["Hover_Text"].slice(0,10));
-            top_labels = sorted_list[i].map((row) => row["OTU_LABELS"].slice(0,10));
+            top_sample = sorted_list[i].map((row) => row["Sample_Values"].slice(0,10).reverse());
+            top_hover_text = sorted_list[i].map((row) => row["Hover_Text"].slice(0,10).reverse());
+            top_labels = sorted_list[i].map((row) => row["OTU_LABELS"].slice(0,10).reverse());
+            console.log(sorted_list[i])
+            
             // top_labels.map((row,index)=> row[index])
             let New_labels=[];
             for (j=0; j<top_labels[0].length;j++){
@@ -73,55 +75,78 @@ function UpdateData(value){
                 New_labels.push(labels)
             }
             console.log(New_labels)
-            console.log(top_labels[0])
+            console.log(top_hover_text[0])
             console.log(top_sample[0])
             var trace1 = {
                 type: "bar",
                 x: top_sample[0],
                 y:New_labels,
-                orientation:'h'
+                orientation:'h',
+                text:top_hover_text[0],
             };
             var layout = {
-                height: 600,
-                width: 800,
-                
+                height: 500,
+                width: 400,
+               
               };
-             
-        //var data = [trace1];
-        // var layout = {
-        // yaxis: {
-        //     labels:New_labels
-        //     }
-        
-        // };  
-            Plotly.newPlot("bar",[trace1],layout,options=options);    
+              Plotly.newPlot("bar",[trace1],layout); 
+
+              bubble_sample = sorted_list[i].map((row) => row["Sample_Values"])
+              bubble_hover_text = sorted_list[i].map((row) => row["Hover_Text"])
+              bubble_otu_id = sorted_list[i].map((row) => row["OTU_LABELS"])
+              bubble_id = sorted_list[i].map((row) => row["OTU"])
+
+              var trace2 = {
+                x: bubble_otu_id[0],
+                y: bubble_sample[0],
+                mode: 'markers',
+                marker: {
+                  size: bubble_sample[0],
+                  color:bubble_otu_id[0],
+                //   colorscale: [[0, 'rgba(200, 255, 200,100)'], [1, 'rgba(120, 100,200,300 )']],
+                colorscale:'Jet',  
+                cmin: 0,
+                cmax: 3500,
+                colorbar: {
+                    thickness: 10,
+                    y: 0.5,
+                    ypad: 0,
+                    title: 'OTU Samples',
+                    titleside: 'bottom',
+                    outlinewidth: 1,
+                    outlinecolor: 'black',
+                    tickfont: {
+                      family: 'Lato',
+                      size: 14,
+                      color: 'green'
+                    }
+                  }
+                },
+                text:bubble_hover_text[0]
+              };
+              
+              var data = [trace2];
+              
+              var layout = {
+                title: `Samples of ${bubble_id[0]}`,
+                showlegend: false,
+                height: 600,
+                width: 1000,
+                xaxis:{
+                    title:"OTU ID"
+                }
+               
+              };
+              
+            Plotly.newPlot('bubble', data, layout);
+              
+         
+          
             //buildplot(top_sample,top_labels);
         }
         }        
     }
-    //console.log(data);
-    //console.log(top_sample);
    
-    
-
-// function buildplot(top_sample, top_labels){
-//     //data['orientation']  = 'h';
-//     var trace1 = {
-//                 type: "bar",
-//                 x: top_sample,
-//                 y:`OTU${top_labels}`,
-//                 orientation:'h'
-//     };
-//     var data = [trace1];
-//     var layout = {
-//     xaxis: {
-//         autorange: true,
-//         //type: "linear"
-//         }
-
-//     // };  
-//     Plotly.newPlot("bar",data);
-// }         
 function optionChanged(newData){
     UpdateData(newData);
    

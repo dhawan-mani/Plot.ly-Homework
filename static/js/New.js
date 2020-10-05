@@ -1,3 +1,4 @@
+// Declaration of Global Variables
 let top_sample = [];
 let top_hover_text = [];
 let top_labels = [];
@@ -12,13 +13,13 @@ let Demo_bbtype =[];
 let Demo_wfreq = [];
 d3.select("#sample-metadata").append("div").attr("class","Demographic-info");
 let Demographic_info = d3.select(".Demographic-info");
+
+// Main function defined
 function init(){
     d3.json("samples.json").then((data) => {
     console.log(data)
     var sample_values = data.samples.map((row) => row["sample_values"])
-    // console.log(sample_values);
     var otu_ids = data.samples.map((row) => row["otu_ids"])
-    // console.log(otu_ids)
     var otu_labels = data.samples.map((row) => row["otu_labels"])
     console.log(otu_labels)
     names = data.names
@@ -29,23 +30,23 @@ function init(){
     Demo_bbtype = data.metadata.map((row) => row["bbtype"])
     Demo_wfreq = data.metadata.map((row) => row["wfreq"])
 
-
-    // console.log(names) 
     var dropdown = d3.select("#selDataset")
+
 // Appending the dropdown values as from names
     for ( i=0; i< names.length; i++){
-    var option = dropdown.append("option")
+        var option = dropdown.append("option")
         option.attr("value",`${names[i]}`)
         option.text(`${names[i]}`)
 
     }
+// Creating a list that will store all the fields that we want from main data
     const list = []
     for (j=0; j<names.length;j++){
         list.push({"OTU": names[j],"Sample_Values":sample_values[j],"OTU_LABELS":otu_ids[j],"Hover_Text":otu_labels[j]})
        
     }
     console.log(list) 
-    
+// Sorting the list
     function compare(a,b){
         const sample_1 = a.Sample_Values;
         const sample_2 = b.Sample_Values;
@@ -59,27 +60,21 @@ function init(){
         }
         return comparison;
     }
-    //let sorted_list=[]
+
     for(k=0; k<names.length; k++){
         sorted_list.push([list[k]].sort(compare))
      
     }
-    //    console.log(top_hover_text) 
+  // The data that will be displayed when the page loads initially
+    UpdateData(940)
+
     })}
-function UpdateData(value){
-    //   On change to the DOM, call getData()
-    // var dropdown = d3.selectAll("#selDataset")
-    // var dataset = dropdown.property("value");
-    console.log(names);
-    // console.log(ethnicity)
-    // let top_sample = [];
-    // let top_hover_text = [];
-    // let top_labels = [];
-   
+  //   On change to the DOM, call UpdateData()
+  function UpdateData(value){
     for (i=0; i<names.length;i++){
         if (value == names[i]){
             console.log("FOUND");
-            //data = sorted_list[i]
+  // Slicing the data to get the Top 10 values
             top_sample = sorted_list[i].map((row) => row["Sample_Values"].slice(0,10).reverse());
             top_hover_text = sorted_list[i].map((row) => row["Hover_Text"].slice(0,10).reverse());
             top_labels = sorted_list[i].map((row) => row["OTU_LABELS"].slice(0,10).reverse());
@@ -94,8 +89,7 @@ function UpdateData(value){
             <strong>bbtype:${Demo_bbtype[i]}<br>
             <strong>wfreq:${Demo_wfreq[i]}<br>
             `)
-  
-            // top_labels.map((row,index)=> row[index])
+// Creating labels for the bar chart
             let New_labels=[];
             for (j=0; j<top_labels[0].length;j++){
                 var labels= `OTU ${top_labels[0][j]}`
@@ -104,19 +98,23 @@ function UpdateData(value){
             console.log(New_labels)
             console.log(top_hover_text[0])
             console.log(top_sample[0])
+
+//----------------------------------- Bar chart--------------------------------
             var trace1 = {
                 type: "bar",
                 x: top_sample[0],
                 y:New_labels,
                 orientation:'h',
                 text:top_hover_text[0],
-            };
+                };
             var layout = {
                 height: 500,
                 width: 400,
                
-              };
-              Plotly.newPlot("bar",[trace1],layout); 
+                };
+        Plotly.newPlot("bar",[trace1],layout); 
+
+//------------------------ Bubble Chart----------------------------------------------
 
               bubble_sample = sorted_list[i].map((row) => row["Sample_Values"])
               bubble_hover_text = sorted_list[i].map((row) => row["Hover_Text"])
@@ -130,7 +128,7 @@ function UpdateData(value){
                 marker: {
                   size: bubble_sample[0],
                   color:bubble_otu_id[0],
-                //   colorscale: [[0, 'rgba(200, 255, 200,100)'], [1, 'rgba(120, 100,200,300 )']],
+// https://plotly.com/javascript/colorscales/
                 colorscale:'Jet',  
                 cmin: 0,
                 cmax: 3500,
@@ -221,23 +219,16 @@ yaxis: {zeroline:false, showticklabels:false, showgrid: false, range: [-1, 1]}
 };
 Plotly.newPlot('gauge', data, layout);   
 
-
-
-
-
-
-
-        }
-        }        
     }
+  }        
+}
    
+// Event listener attached
 function optionChanged(newData){
     UpdateData(newData);
    
 }     
-          
-           
-            
+ // Main function called.
 init();
     
     

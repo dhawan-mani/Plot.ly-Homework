@@ -85,7 +85,8 @@ function UpdateData(value){
             top_labels = sorted_list[i].map((row) => row["OTU_LABELS"].slice(0,10).reverse());
             console.log(sorted_list[i])
             Demographic_info.html("")
-            Demographic_info.html(`<strong>id:${names[i]}<br>
+            Demographic_info.html(`
+            <strong>id:${names[i]}<br>
             <strong>ethnicity:${Demo_ethnicity[i]}<br>
             <strong>gender:${Demo_gender[i]}<br>
             <strong>age:${Demo_age[i]}<br>
@@ -93,18 +94,7 @@ function UpdateData(value){
             <strong>bbtype:${Demo_bbtype[i]}<br>
             <strong>wfreq:${Demo_wfreq[i]}<br>
             `)
-
-
-      
-// let Demo_gender = [];
-// let Demo_age =[];
-// let Demo_location = [];
-// let Demo_bbtype =[];
-// let Demo_wfreq
-
-
-
-            
+  
             // top_labels.map((row,index)=> row[index])
             let New_labels=[];
             for (j=0; j<top_labels[0].length;j++){
@@ -176,10 +166,67 @@ function UpdateData(value){
               };
               
             Plotly.newPlot('bubble', data, layout);
-              
-         
-          
-            //buildplot(top_sample,top_labels);
+// ----------------------------Gauge Chart------------------------------------------------
+ 
+console.log(Demo_wfreq[i])
+var degrees = 9 - Demo_wfreq[i],
+radius = .5;
+var radians = degrees * Math.PI / 9;
+var x = radius * Math.cos(radians);
+var y = radius * Math.sin(radians);
+var mainPath = 'M -.0 -0.025 L .0 0.025 L ',
+pathX = String(x),
+ space = ' ',
+ pathY = String(y),
+pathEnd = ' Z';
+var path = mainPath.concat(pathX,space,pathY,pathEnd);
+var data = [{ type: 'scatter',
+ x: [0], y:[0],
+marker: {size: 28, color:'850000'},
+showlegend: false,
+name: 'Wash Frequency',
+text: Demo_wfreq[i],
+// direction: "counter-clockwise",
+hoverinfo: 'text+name'},
+{ values: [50/9,50/9,50/9,50/9,50/9,50/9,50/9,50/9,50/9,50],
+rotation: 90,
+text: ['8-9', '7-8', '6-7', '5-6',
+      '4-5', '3-4', '2-3', '1-2', '0-1' ,''],
+textinfo: 'text',
+textposition:'inside',      
+marker: {colors:['#006203','#0F9200','#30CB00','#4AE54A','#A4FBA6','#9CB8A0','#D3E0CE','#EAE9E4','#F0F1F4','FFFFFF']},
+hoverinfo: 'text',
+hole: .5,
+type: 'pie',
+showlegend: false
+}];
+
+var layout = {
+shapes:[{
+  type: 'path',
+    path: path,
+   fillcolor: '850000',
+   line: {
+    color: '850000'
+  }
+}],
+title: '<b>Belly Button washing Frequency</b> <br> Scrubs Per Week',
+height: 500,
+width: 600,
+margin: {
+l: 25, r: 25, b: 25, t: 75
+},
+xaxis: {zeroline:false, showticklabels:false, showgrid: false, range: [-1, 1]},
+yaxis: {zeroline:false, showticklabels:false, showgrid: false, range: [-1, 1]}
+};
+Plotly.newPlot('gauge', data, layout);   
+
+
+
+
+
+
+
         }
         }        
     }
